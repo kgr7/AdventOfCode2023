@@ -1,4 +1,3 @@
-use std::collections:: HashMap;
 use std::error::Error;
 
 pub async fn part_1() -> Result<(), Box<dyn Error>> {
@@ -16,7 +15,6 @@ pub async fn part_1() -> Result<(), Box<dyn Error>> {
 
 fn find_calibration_value(word: &str) -> i8 {
     let mut res: i8 = 0;
-    let start = 0;
 
     'first: for x in 0..word.chars().count() {
         let char = word.chars().nth(x).expect("Couldn't unwrap char");
