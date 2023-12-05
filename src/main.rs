@@ -1,8 +1,9 @@
+#![allow(unused)]
 use std::error::Error;
 
-mod shared;
 mod day1;
 mod day2;
+mod shared;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -11,4 +12,3 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let _1 = day2::main::part_1().await;
     Ok(())
 }
-

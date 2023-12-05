@@ -12,19 +12,20 @@ pub async fn part_1() {
     let mut total: i32 = 0;
 
     'outer: for game in &games {
-        let game_id = extract_game_id(game);
-        let rounds = extract_rounds(game);
-        for round in rounds {
-            if round.red > limit.red || round.green > limit.green || round.blue > limit.blue {
-                continue 'outer;
-            }
-        }
-        total += game_id;
+        // let game_id = extract_game_id(game);
+        let game_products = extract_rounds(game);
+        total += game_products;
+        // for round in rounds {
+        //     if round.red > limit.red || round.green > limit.green || round.blue > limit.blue {
+        //         continue 'outer;
+        //     }
+        // }
+        // total += game_id;
     }
 
-    println!("Valid games sum: {}", total);
+    println!("Game products sum: {}", total);
 }
-
+#[derive(Default)]
 struct Round {
     red: i32,
     green: i32,
@@ -40,11 +41,11 @@ fn parse_input() -> Vec<String> {
     games
 }
 
-fn extract_rounds(line: &str) -> Vec<Round> {
-    let valid_colours = vec!["red", "green", "blue"];
-
-    let all_rounds_str = line.split(":").collect::<Vec<&str>>()[1].trim();
+fn extract_rounds(line: &str) -> i32 {
+    let all_rounds_str = line.split(": ").collect::<Vec<_>>()[1];
     let rounds = all_rounds_str.split(";").collect::<Vec<_>>();
+
+    let valid_colours = vec!["red", "green", "blue"];
 
     let mut rnds: Vec<Round> = Vec::new();
 
@@ -73,7 +74,24 @@ fn extract_rounds(line: &str) -> Vec<Round> {
         rnds.push(rnd);
     }
 
-    rnds
+    let mut max_cubes = Round::default();
+
+    for round in rnds {
+        if round.red > max_cubes.red {
+            max_cubes.red = round.red;
+        }
+        if round.green > max_cubes.green {
+            max_cubes.green = round.green;
+        }
+        if round.blue > max_cubes.blue {
+            max_cubes.blue = round.blue;
+        }
+    }
+
+    let power = max_cubes.red * max_cubes.green * max_cubes.blue;
+
+    power
+    // rnds
 }
 
 fn extract_game_id(line: &str) -> i32 {
