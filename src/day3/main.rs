@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs;
 
 fn parse_input() -> Vec<char> {
@@ -52,6 +53,8 @@ pub async fn part_1() {
     let mut total = 0;
     let mut seen: Vec<(usize, usize)> = Vec::new();
 
+    let mut gear_map: HashMap<usize, Vec<i32>> = HashMap::new();
+
     for i in 0..chars.len() {
         if chars[i] != 0x2E as char && !numbers.contains(&chars[i]) {
             let number_checks = vec![
@@ -67,16 +70,30 @@ pub async fn part_1() {
 
             for check_idx in number_checks.iter().filter(|&x| *x > 0 as usize) {
                 let (start, end) = match_number(*check_idx, &numbers, &chars);
-                for j in start..end {}
                 if seen.contains(&(start, end)) {
                     continue;
                 }
                 seen.push((start, end));
                 let final_num = join_to_num(start, end, &chars);
                 total += final_num;
+
+                // matches for asterisk (*)
+                if chars[i] == 0x2A as char {
+                    gear_map.entry(i).or_insert(Vec::new()).push(final_num);
+                }
             }
         }
     }
 
+    let mut total_products = 0;
+    for (asterisk_idx, values) in &gear_map {
+        if values.len() < 2 {
+            continue;
+        }
+        let product: i32 = values.iter().product();
+        total_products += product;
+    }
+
+    println!("Total products: {}", total_products);
     println!("Total is: {}", total);
 }
